@@ -36,9 +36,9 @@
 
 #pragma once
 #include "Adafruit_NeoPixel.h"
-#include "pico/stdlib"
-#include "hardware/pio"
-#include "pico/time"
+#include "pico/stdlib.h"
+#include "hardware/pio.h"
+#include "pico/time.h"
 #include "ws2812byte.pio.h"
 
 
@@ -265,7 +265,7 @@ class Adafruit_NeoPixel {
              output is often used for pixel brightness in animation effects.
   */
   static uint8_t    sine8(uint8_t x) {
-    return pgm_read_byte(&_NeoPixelSineTable[x]); // 0-255 in, 0-255 out
+    return _NeoPixelSineTable[x]; // 0-255 in, 0-255 out
   }
   /*!
     @brief   An 8-bit gamma-correction function for basic pixel brightness
@@ -279,7 +279,7 @@ class Adafruit_NeoPixel {
              need to provide your own gamma-correction function instead.
   */
   static uint8_t    gamma8(uint8_t x) {
-    return pgm_read_byte(&_NeoPixelGammaTable[x]); // 0-255 in, 0-255 out
+    return _NeoPixelGammaTable[x]; // 0-255 in, 0-255 out
   }
   /*!
     @brief   Convert separate red, green and blue values into a single

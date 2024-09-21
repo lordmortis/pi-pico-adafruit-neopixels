@@ -80,7 +80,8 @@
   @return  Adafruit_NeoPixel object. Call the begin() function before use.
 */
 Adafruit_NeoPixel::Adafruit_NeoPixel(uint16_t n, uint16_t p, neoPixelType t) :
-  begun(false), brightness(0), pixels(NULL), opixels(NULL), brightfr(NULL), brightfg(NULL), brightfb(NULL), brightfw(NULL)  {
+//brightfg is skipped because for some reason setting that to null causes memory allocation errors.
+  begun(false), brightness(0), pixels(NULL), opixels(NULL), brightfr(NULL), brightfb(NULL), brightfw(NULL)  {
   PRINTF1("In constructor 1\n");
   endTime = get_absolute_time() ;
   PRINTF1("In constructor 2\n");
@@ -89,7 +90,6 @@ Adafruit_NeoPixel::Adafruit_NeoPixel(uint16_t n, uint16_t p, neoPixelType t) :
   updateType(t);
   PRINTF1("In constructor 4\n");
   updateLength(n);
-
 }
 
 /*!
@@ -152,7 +152,7 @@ void Adafruit_NeoPixel::begin(void) {
            type).
 */
 void Adafruit_NeoPixel::updateLength(uint16_t n) {
-  free(pixels); // Free existing data (if any)
+  if (pixels != nullptr) free(pixels); // Free existing data (if any)
 
   // Allocate new data -- note: ALL PIXELS ARE CLEARED
   numBytes = n * ((wOffset == rOffset) ? 3 : 4);
@@ -164,7 +164,7 @@ void Adafruit_NeoPixel::updateLength(uint16_t n) {
   }
   
   if (brightfr != NULL) {
-	  free(opixels) ;
+      if (opixels != nullptr) free(opixels) ;
 	  if((opixels = (uint8_t *)malloc(numBytes))) {
 			memset(opixels, 0, numBytes);
 			numLEDs = n;
@@ -233,7 +233,7 @@ void Adafruit_NeoPixel::rp2040Init(uint8_t set_pin)
 		if (resultsm != -1) {
 			if (pio1_offset == -1) {
 				canpio = pio_can_add_program(pio1, &ws2812byte_program);
-				if (canpio) pio1_offset = pio_add_program(pio0, &ws2812byte_program);
+				if (canpio) pio1_offset = pio_add_program(pio1, &ws2812byte_program);
 			};
 			pio = pio1;
 		}
